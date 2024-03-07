@@ -1,3 +1,6 @@
+DROP DATABASE abbs;
+CREATE DATABASE abbs;
+USE abbs;
 SET SESSION FOREIGN_KEY_CHECKS=0;
 
 /* Drop Tables */
@@ -18,8 +21,8 @@ CREATE TABLE anniversary
 (
 	aid int NOT NULL AUTO_INCREMENT,
 	uid varchar(12) NOT NULL,
-	adate char(8) NOT NULL,
 	aname varchar(20) NOT NULL,
+	adate char(8) NOT NULL,
 	isHoliday int DEFAULT 0,
 	PRIMARY KEY (aid)
 );
@@ -151,6 +154,3 @@ ALTER TABLE schedule
 	ON UPDATE RESTRICT
 	ON DELETE RESTRICT
 ;
-
-
-
