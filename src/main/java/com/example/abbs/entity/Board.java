@@ -27,6 +27,7 @@ public class Board {
 		this.likeCount = likeCount;
 		this.files = files;
 	}
+
 	@Override
 	public String toString() {
 		return "Board [bid=" + bid + ", title=" + title + ", content=" + content + ", uid=" + uid + ", modTime="
