@@ -1,20 +1,40 @@
 package com.example.abbs.controller;
 
-import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.example.abbs.util.AsideUtil;
+
+import jakarta.servlet.http.HttpSession;
+
+import java.util.Map;
+
 @Controller
 @RequestMapping("/aside")
 public class AsideController {
+    @Autowired private AsideUtil asideUtil;
 
-    @ResponseBody           // html 데이터 바로 보내주는 코드
+    @ResponseBody
     @GetMapping("/stateMsg")
-    public String changeStateMsg(String stateMsg, HttpSession session){
+    public String changeStateMsg(String stateMsg, HttpSession session) {
         session.setAttribute("stateMsg", stateMsg);
         return "return message";
     }
-    
+
+    @ResponseBody
+    @GetMapping("/weather")
+    public String weather(HttpSession session) {
+        String location = (String) session.getAttribute("location") + "청";
+        String roadAddr = asideUtil.getRoadAddr(location);
+        Map<String, String> map = asideUtil.getGeocode(roadAddr);
+        String result = asideUtil.getWeather(map.get("lon"), map.get("lat"));
+//        return roadAddr + ", lon=" + map.get("lon") + ", lat=" + map.get("lat");
+        return result;
+    }
+
 }
