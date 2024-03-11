@@ -129,4 +129,13 @@ public class UserController {
         return "redirect:/user/login";
     }
 
+    @GetMapping("/update")
+    public String update(){
+    return null;
+    }
+
+    @PostMapping("/update")
+    public String updateProc(){
+        return null;
+    }
 }

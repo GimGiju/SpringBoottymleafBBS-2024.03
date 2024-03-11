@@ -1,5 +1,7 @@
 package com.example.abbs.controller;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -11,8 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.example.abbs.util.AsideUtil;
 
 import jakarta.servlet.http.HttpSession;
-
-import java.util.Map;
 
 @Controller
 @RequestMapping("/aside")
@@ -33,7 +33,6 @@ public class AsideController {
         String roadAddr = asideUtil.getRoadAddr(location);
         Map<String, String> map = asideUtil.getGeocode(roadAddr);
         String result = asideUtil.getWeather(map.get("lon"), map.get("lat"));
-//        return roadAddr + ", lon=" + map.get("lon") + ", lat=" + map.get("lat");
         return result;
     }
 
