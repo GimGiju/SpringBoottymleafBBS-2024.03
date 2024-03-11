@@ -130,12 +130,17 @@ public class UserController {
     }
 
     @GetMapping("/update")
-    public String update(){
-    return null;
+    public String updateForm(){
+    return "/user/update";
     }
 
     @PostMapping("/update")
     public String updateProc(){
+        return null;
+    }
+
+    @GetMapping("/delete")
+    public String deleteForm(){
         return null;
     }
 }
