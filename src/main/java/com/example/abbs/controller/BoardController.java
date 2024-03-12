@@ -4,7 +4,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.abbs.entity.Like;
 import com.example.abbs.entity.Reply;
+import com.example.abbs.service.LikeService;
 import com.example.abbs.service.ReplyService;
 import com.example.abbs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 public class BoardController {
     @Autowired private BoardService boardService;
     @Autowired private ReplyService replyService;
+    @Autowired private LikeService likeService;
     @Autowired private JsonUtil jsonUtil;
     @Value("${spring.servlet.multipart.location}")private String uploadDir;
 
@@ -104,6 +107,7 @@ public class BoardController {
             model.addAttribute("fileList", fileList);           // 파일 리스트로 만들어서 내려보내줌
         }
         model.addAttribute("board", board);
+        model.addAttribute("Count", board.getLikeCount());  // 좋아요 카운트
 
         List<Reply> replyList = replyService.getReplyList(bid);           // 댓글 리스트를 만들어줌
         model.addAttribute("replyList", replyList);
@@ -126,5 +130,21 @@ public class BoardController {
         boardService.increaseReplyCount(bid);           // 댓글 카운트 올려주는 부분
 
         return "redirect:/board/detail/" + bid + "/" + uid + "?option=DNI";
+    }
+    
+    // AJAX 처리
+    // AJAX 처리
+    @GetMapping("/like/{bid}")
+    public String like(@PathVariable int bid, HttpSession session, Model model) {
+        String sessUid = (String) session.getAttribute("sessUid");
+        Like like = likeService.getLike(bid, sessUid);
+        if (like == null)
+            likeService.insertLike(new Like(sessUid, bid, 1));
+        else
+            likeService.toggleLike(like);
+        int count = likeService.getLikeCount(bid);
+//		boardService.		board.likeCount update!!!
+        model.addAttribute("count", count);
+        return "board/detail::#likeCount";
     }
 }
