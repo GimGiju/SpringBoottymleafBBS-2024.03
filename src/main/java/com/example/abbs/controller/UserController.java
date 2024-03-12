@@ -135,8 +135,9 @@ public class UserController {
     }
 
     @PostMapping("/update")
-    public String updateProc(){
-        return null;
+    public String updateProc(String pwd, String pwd2, String uname, String email){
+
+        return "redirect:/user/";
     }
 
     @GetMapping("/delete")
