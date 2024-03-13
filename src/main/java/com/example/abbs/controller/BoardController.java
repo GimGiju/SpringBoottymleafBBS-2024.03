@@ -2,7 +2,9 @@ package com.example.abbs.controller;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.example.abbs.entity.Like;
 import com.example.abbs.entity.Reply;
@@ -107,7 +109,14 @@ public class BoardController {
             model.addAttribute("fileList", fileList);           // 파일 리스트로 만들어서 내려보내줌
         }
         model.addAttribute("board", board);
-        model.addAttribute("Count", board.getLikeCount());  // 좋아요 카운트
+
+        Like like = likeService.getLike(bid, sessUid);                    // 좋아요 처리 하는 부분
+        if (like == null) {
+            session.setAttribute("likeClicked", 0);
+        }else{
+            session.setAttribute("likeClicked", like.getValue());
+        }
+        model.addAttribute("count", board.getLikeCount());  // 좋아요 카운트
 
         List<Reply> replyList = replyService.getReplyList(bid);           // 댓글 리스트를 만들어줌
         model.addAttribute("replyList", replyList);
@@ -131,19 +140,22 @@ public class BoardController {
 
         return "redirect:/board/detail/" + bid + "/" + uid + "?option=DNI";
     }
-    
-    // AJAX 처리
+
     // AJAX 처리
     @GetMapping("/like/{bid}")
     public String like(@PathVariable int bid, HttpSession session, Model model) {
         String sessUid = (String) session.getAttribute("sessUid");
         Like like = likeService.getLike(bid, sessUid);
-        if (like == null)
-            likeService.insertLike(new Like(sessUid, bid, 1));
-        else
-            likeService.toggleLike(like);
+        if (like == null) {
+            likeService.insertLike(new Like(sessUid, bid, 1));    // 내가 like를 누른적이 없으면 like 값이 1(진한 좋아요색)이 되고 누른적이 없으면 toggle이됨
+            session.setAttribute("likeClicked", 1);
+        } else {
+            int value = likeService.toggleLike(like);
+            session.setAttribute("likeClicked", value);
+        }
         int count = likeService.getLikeCount(bid);
-//		boardService.		board.likeCount update!!!
+        boardService.updateLikeCount(bid, count);
+//        System.out.println(count);
         model.addAttribute("count", count);
         return "board/detail::#likeCount";
     }

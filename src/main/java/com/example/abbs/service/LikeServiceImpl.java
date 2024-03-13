@@ -25,13 +25,15 @@ public class LikeServiceImpl implements LikeService {
     public void insertLike(Like like) {
         likeDao.insertLike(like);
     }
-
+    
+    // 좋아요 아이콘 관련 코드
     @Override
-    public void toggleLike(Like like) {
+    public int toggleLike(Like like) {
         like = likeDao.getLike(like.getBid(), like.getUid());
         int value = like.getValue() == 0 ? 1 : 0;
         like.setValue(value);
         likeDao.updateLike(like);
+        return value;
     }
 
     @Override

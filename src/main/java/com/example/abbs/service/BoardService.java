@@ -26,5 +26,7 @@ public interface BoardService {
 
     void increaseLikeCount(int bid);
 
+    void updateLikeCount(int bid, int count);
+
 
 }

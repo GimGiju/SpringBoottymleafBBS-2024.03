@@ -14,7 +14,7 @@ public interface LikeService {
 
     void insertLike(Like like);
 
-    void toggleLike(Like like);         // toggle -> value가 0이면 1로 바꾸고, 1이면 0으로 바꾸는걸 toggle이라함
+    int toggleLike(Like like);         // toggle -> value가 0이면 1로 바꾸고, 1이면 0으로 바꾸는걸 toggle이라함 // value return 해줌
 
     int getLikeCount(int bid);          // bid에 대해서 좋아요가 몇개가 눌렸는지 확인
     
