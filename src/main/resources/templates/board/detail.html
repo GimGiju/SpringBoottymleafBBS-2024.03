@@ -7,18 +7,25 @@
     </style>
     <script th:inline="javascript">
         function likeClick(bid) {
+             let oldCount = $('#likeCount').text();
+             // console.log("oldCount=" + oldCount);
              $.ajax({
                  type: 'GET',
                  url: '/abbs/board/like/' + bid,
-                 success: function(count) {
+                 success: function(count) {				// count = <span id="likeCount">2</span>
                      $('#likeCount').replaceWith(count);
-                     location.reload();
+                     // console.log("count=" + count);
+                     let newCount = $('#likeCount').text();
+                     if (oldCount > newCount)
+                         $('#likeIcon').attr({'class': 'fa-regular fa-thumbs-up'}); 	// 좋아요 취소
+                     else
+                         $('#likeIcon').attr({'class': 'fa-solid fa-thumbs-up'});		// 좋아요 누름
                  }
              });
          }
-         function deleteBoard() {
-             $('#deleteModal').modal('show');
-         }
+          function deleteBoard() {
+              $('#deleteModal').modal('show');
+          }
     </script>
 </head>
 <body>
@@ -61,20 +68,20 @@
                         <h5>[[${board.uname}]]</h5>
                         <h6>조회 [[${board.viewCount}]] &nbsp;&nbsp; 댓글 [[${board.replyCount}]]</h6>
                         <h6>
-                            <span th:if="${session.sessUid eq board.uid}">	<!-- 본인은 좋아요 누르지 못함 -->
-                                <a href="#">
-                                    <span th:if="${session.likeClicked == 1}"><i class="fa-solid fa-thumbs-up"></i></span>
-                                    <span th:if="${session.likeClicked == 0}"><i class="fa-regular fa-thumbs-up"></i></span>
-                                    [[${count}]]
-                                </a>
-                            </span>
+								<span th:if="${session.sessUid eq board.uid}">	<!-- 본인은 좋아요 누르지 못함 -->
+									<a href="#">
+										<span th:if="${session.likeClicked == 1}"><i id="likeIcon" class="fa-solid fa-thumbs-up"></i></span>
+										<span th:if="${session.likeClicked == 0}"><i id="likeIcon" class="fa-regular fa-thumbs-up"></i></span>
+										[[${count}]]
+									</a>
+								</span>
                             <span th:if="${session.sessUid ne board.uid}">
-                                <a href="#" th:onclick="likeClick([[${board.bid}]])">
-                                    <span th:if="${session.likeClicked == 1}"><i class="fa-solid fa-thumbs-up"></i></span>
-                                    <span th:if="${session.likeClicked == 0}"><i class="fa-regular fa-thumbs-up"></i></span>
-                                    <span th:text="${count}"></span>
-                                </a>
-                            </span>
+									<a href="#" th:onclick="likeClick([[${board.bid}]])">
+										<span th:if="${session.likeClicked == 1}"><i id="likeIcon" class="fa-solid fa-thumbs-up"></i></span>
+										<span th:if="${session.likeClicked == 0}"><i id="likeIcon" class="fa-regular fa-thumbs-up"></i></span>
+										<span id="likeCount" th:text="${count}"></span>
+									</a>
+								</span>
                         </h6>
                     </div>
                     <hr>

@@ -32,6 +32,7 @@ public class BoardController {
     @Autowired private LikeService likeService;
     @Autowired private JsonUtil jsonUtil;
     @Value("${spring.servlet.multipart.location}")private String uploadDir;
+    private String menu = "board";
 
     @GetMapping("/list")
     public String list(@RequestParam(name="p", defaultValue="1") int page,
@@ -56,12 +57,14 @@ public class BoardController {
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
         model.addAttribute("pageList", pageList);
+        model.addAttribute("menu", menu);
 
         return "board/list";
     }
 
     @GetMapping("/insert")
-    public String insertForm(){
+    public String insertForm(Model model){
+        model.addAttribute("menu", menu);
         return "board/insert";
     }
 
@@ -120,6 +123,7 @@ public class BoardController {
 
         List<Reply> replyList = replyService.getReplyList(bid);           // 댓글 리스트를 만들어줌
         model.addAttribute("replyList", replyList);
+        model.addAttribute("menu", menu);
         return "board/detail";
     }
 
@@ -141,13 +145,13 @@ public class BoardController {
         return "redirect:/board/detail/" + bid + "/" + uid + "?option=DNI";
     }
 
-    // AJAX 처리
+    // AJAX 처리 - 타임리프에서 세팅하는 값을 변경하기 위한 방법
     @GetMapping("/like/{bid}")
     public String like(@PathVariable int bid, HttpSession session, Model model) {
         String sessUid = (String) session.getAttribute("sessUid");
         Like like = likeService.getLike(bid, sessUid);
         if (like == null) {
-            likeService.insertLike(new Like(sessUid, bid, 1));    // 내가 like를 누른적이 없으면 like 값이 1(진한 좋아요색)이 되고 누른적이 없으면 toggle이됨
+            likeService.insertLike(new Like(sessUid, bid, 1));       // 내가 like를 누른적이 없으면 like 값이 1(진한 좋아요색)이 되고 누른적이 없으면 toggle이됨
             session.setAttribute("likeClicked", 1);
         } else {
             int value = likeService.toggleLike(like);
@@ -155,7 +159,6 @@ public class BoardController {
         }
         int count = likeService.getLikeCount(bid);
         boardService.updateLikeCount(bid, count);
-//        System.out.println(count);
         model.addAttribute("count", count);
         return "board/detail::#likeCount";
     }
