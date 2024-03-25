@@ -54,7 +54,7 @@ public class AsideUtil {
 
             // JSON 데이터에서 원하는 값 추출하기
             JSONParser parser = new JSONParser();
-            JSONObject object = (JSONObject) parser.parse(result.toString());
+            JSONObject object = (JSONObject) parser.parse(result);
             JSONObject results = (JSONObject) object.get("results");
             JSONArray juso = (JSONArray) results.get("juso");
             JSONObject jusoItem = (JSONObject) juso.get(0);
@@ -64,45 +64,45 @@ public class AsideUtil {
         }
         return roadAddr;
     }
-    public Map<String, String> getGeocode(String addr)  {
+
+    // Kakao Local API
+    public Map<String, String> getGeocode(String addr) {
         Map<String, String> map = new HashMap<String, String>();
         try {
             String query = URLEncoder.encode(addr, "utf-8");
             String apiUrl = "https://dapi.kakao.com/v2/local/search/address.json"
                     + "?query=" + query;
+
             URL url = new URL(apiUrl);
             // Header setting
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestProperty("Authorization", "KakaoAK " + kakaoApiKey);
+
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
-            StringBuffer sb = new StringBuffer();
             String line = null, result = "";
             while ((line = br.readLine()) != null)
                 result += line;
             br.close();
 
-            //JSON 데이터에서 원하는 값 추출하기
+            // JSON 데이터에서 원하는 값 추출하기
             JSONParser parser = new JSONParser();
-            JSONObject object = (JSONObject)parser.parse(result.toString());
+            JSONObject object = (JSONObject) parser.parse(result);
             JSONArray documents = (JSONArray) object.get("documents");
             JSONObject item = (JSONObject) documents.get(0);
             String lon = (String) item.get("x");
             String lat = (String) item.get("y");
-    		System.out.println(lon + ", " + lat);
-
             map.put("lon", lon);
             map.put("lat", lat);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return map;
     }
 
-
     // Open Weather API
-    public String getWeather(String lon, String lat){
+    public String getWeather(String lon, String lat) {
         String apiUrl = "https://api.openweathermap.org/data/2.5/weather"
-                + "?lat=" + lat + "&lon=" + lon + "&appId=" + openWeatherApiKey
+                + "?lat=" + lat + "&lon=" + lon + "&appid=" + openWeatherApiKey
                 + "&units=metric&lang=kr";
         String weatherStr = null;
         try {
@@ -113,9 +113,8 @@ public class AsideUtil {
                 result += line;
             br.close();
 
-            //JSON 데이터에서 원하는 값 추출하기
             JSONParser parser = new JSONParser();
-            JSONObject obj = (JSONObject) parser.parse(result);         // result 받아오기
+            JSONObject obj = (JSONObject) parser.parse(result);
             JSONArray weather = (JSONArray) obj.get("weather");
             JSONObject weatherItem = (JSONObject) weather.get(0);
             String desc = (String) weatherItem.get("description");
@@ -126,7 +125,7 @@ public class AsideUtil {
             String iconUrl = "http://api.openweathermap.org/img/w/" + iconCode + ".png";
             weatherStr = "<img src=\"" + iconUrl + "\" height=\"28\">" + desc + ","
                     + " 온도: " + tempStr + "&#8451";
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return weatherStr;

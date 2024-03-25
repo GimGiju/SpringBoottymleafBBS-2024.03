@@ -3,7 +3,7 @@ package com.example.abbs.entity;
 public class Schedule {
 	private int sid;
 	private String uid;
-	private String sadte;
+	private String sdate;
 	private String title;
 	private String place;
 	private String startTime;
@@ -11,12 +11,39 @@ public class Schedule {
 	private int isImportant;
 	private String memo;
 	public Schedule() { }
+
+	public Schedule(String uid, String sdate, String title, String place, String startTime, String endTime,
+					int isImportant, String memo) {
+		this.uid = uid;
+		this.sdate = sdate;
+		this.title = title;
+		this.place = place;
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.isImportant = isImportant;
+		this.memo = memo;
+	}
+	public Schedule(int sid, String uid, String sdate, String title, String place, String startTime, String endTime,
+					int isImportant, String memo) {
+		this.sid = sid;
+		this.uid = uid;
+		this.sdate = sdate;
+		this.title = title;
+		this.place = place;
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.isImportant = isImportant;
+		this.memo = memo;
+	}
+
+
 	@Override
 	public String toString() {
-		return "Schedule [sid=" + sid + ", uid=" + uid + ", sadte=" + sadte + ", title=" + title + ", place=" + place
+		return "Schedule [sid=" + sid + ", uid=" + uid + ", sdate=" + sdate + ", title=" + title + ", place=" + place
 				+ ", startTime=" + startTime + ", endTime=" + endTime + ", isImportant=" + isImportant + ", memo="
 				+ memo + "]";
 	}
+
 	public int getSid() {
 		return sid;
 	}
@@ -29,11 +56,11 @@ public class Schedule {
 	public void setUid(String uid) {
 		this.uid = uid;
 	}
-	public String getSadte() {
-		return sadte;
+	public String getSdate() {
+		return sdate;
 	}
-	public void setSadte(String sadte) {
-		this.sadte = sadte;
+	public void setSdate(String sdate) {
+		this.sdate = sdate;
 	}
 	public String getTitle() {
 		return title;
@@ -71,5 +98,4 @@ public class Schedule {
 	public void setMemo(String memo) {
 		this.memo = memo;
 	}
-	
 }

@@ -17,15 +17,15 @@ public interface BoardDao {
             + " WHERE b.bid=#{bid}")
     Board getBoard(int bid);
 
-    @Select("select count(bid) from board" +
-            " join users on board.uid=users.uid" +
-            " where board.isDeleted=0 and ${field} like #{query}")
+    @Select("select count(b.bid) from board b"
+            + " JOIN users u ON b.uid=u.uid"
+            + " where b.isDeleted=0 and ${field} like #{query}")
     int getBoardCount(String field, String query);
 
     @Select("SELECT b.*, u.uname FROM board b"
             + " JOIN users u ON b.uid=u.uid"
             + " WHERE b.isDeleted=0 and ${field} like #{query}"
-            + " ORDER BY b.modTime desc"        // asc는 반대
+            + " ORDER BY b.modTime desc"
             + " LIMIT #{count} OFFSET #{offset}")
     List<Board> getBoardList(String field, String query, int count, int offset);
 
